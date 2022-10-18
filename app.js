@@ -4,7 +4,7 @@ const profileRouter = require("./routes/profileRoutes");
 
 const app = express();
 require("dotenv").config();
-// added to accpet json data of body
+// added to accept json data of body
 app.use(express.json());
 
 app.use("/users",userRouter);
