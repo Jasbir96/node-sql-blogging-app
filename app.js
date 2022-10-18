@@ -1,5 +1,6 @@
 const express = require("express");
 const userRouter = require("./routes/userRoutes");
+const profileRouter = require("./routes/profileRoutes");
 
 const app = express();
 require("dotenv").config();
@@ -7,6 +8,8 @@ require("dotenv").config();
 app.use(express.json());
 
 app.use("/users",userRouter);
+app.use("/profiles",profileRouter);
+
 
 
 // added 404 page not found route
