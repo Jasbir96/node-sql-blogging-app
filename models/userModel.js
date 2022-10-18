@@ -39,5 +39,20 @@ const getByEntity = (searchObj) => {
             })
     })
 }
+
+const follow = (userId, followingId) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`INSERT INTO user_following 
+        SET u_id = ${userId},following_id = ${followingId}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create = create;
 module.exports.getByEntity = getByEntity;
+module.exports.follow=follow

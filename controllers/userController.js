@@ -65,11 +65,37 @@ const loginUserController = async function (req, res) {
         })
     } catch (err) {
         res.status(500).json({
+            message: err.message,
+            status:"failure"
+        })
+    }
+}
+
+const followUserController = async function (req, res) {
+    try {
+        if(req.body.id==undefined||req.body.following_id==undefined){
+            res.status(400)
+            .json({
+                    status:"failure",
+                    message:"missing required parameters"
+            })}
+        let userId = req.body.id;
+        // the user i want to follow;
+        let followingId = req.body.following_id
+        await userModel.follow(userId, followingId);
+        res.status(200).json({
+            status: "success",
+            result: "you are now a follower"
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
             err: err.message
         })
     }
 }
 module.exports={
     createUserController,
-    loginUserController
+    loginUserController,
+    followUserController
 }
