@@ -39,6 +39,21 @@ const getByEntity = (searchObj) => {
             })
     })
 }
+// get all users -> paginated version
+const getAll = (page,size) => {
+const offset = (page - 1)*size;
+    return new Promise(function (resolve, reject) {
+        connection.query(`SELECT * from users AND LIMIT ${size} OFFSET ${offset}`,
+            function (err, res) {
+                if (err) {
+                    reject(err)
+                    return;
+                } else {
+                    resolve(res);
+                }
+            })
+    })
+}
 const follow = (userId, followingId) => {
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO user_following 
@@ -69,3 +84,4 @@ module.exports.create = create;
 module.exports.getByEntity = getByEntity;
 module.exports.follow=follow;
 module.exports.unfollow=unfollow;
+module.exports.getAll=getAll;
