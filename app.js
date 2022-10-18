@@ -1,6 +1,7 @@
 const express = require("express");
 
 const app = express();
+require("dotenv").config();
 
 // added 404 page not found route
 app.use(function (req, res) {
