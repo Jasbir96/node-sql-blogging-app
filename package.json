@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/Jasbir96/node-sql-blogging-app/issues"
   },
-  "homepage": "https://github.com/Jasbir96/node-sql-blogging-app#readme"
+  "homepage": "https://github.com/Jasbir96/node-sql-blogging-app#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
 }
