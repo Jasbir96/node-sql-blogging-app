@@ -6,3 +6,11 @@ CREATE TABLE IF NOT EXISTS users(
     bio VARCHAR(255) NOT NULL,
     image VARCHAR(255)
 );
+CREATE TABLE IF NOT EXISTS user_following (
+   u_id VARCHAR(100) NOT NULL,
+   following_id  VARCHAR(100) NOT NULL ,
+   PRIMARY KEY (u_id, following_id),
+   INDEX(u_id),
+   FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE,
+   FOREIGN KEY (u_id) REFERENCES users(id) ON DELETE CASCADE
+);
