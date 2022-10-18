@@ -1,5 +1,5 @@
 const userModel = require("../models/userModel");
-
+const jwt = require("jsonwebtoken");
 const createUserController = async function (req, res) {
     try {
         let userObj = req.body;
@@ -11,7 +11,7 @@ const createUserController = async function (req, res) {
     res.status(400).json({
             status: "failure",
             message:"some required fields are missing"})   
-            
+
             return;
         }
         const newUser = await userModel.create(userObj);
