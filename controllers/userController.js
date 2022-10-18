@@ -94,8 +94,26 @@ const followUserController = async function (req, res) {
         })
     }
 }
+const unFollowUserController = async function (req, res) {
+    try {
+        let userId = req.body.id;
+        // the user i want to follow;
+        let followingId = req.body.following_id
+        await userModel.unfollow(userId, followingId);
+        res.status(200).json({
+            status: "success",
+            result: "you are not a follower anymore"
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports={
     createUserController,
     loginUserController,
-    followUserController
+    followUserController,
+    unFollowUserController
 }

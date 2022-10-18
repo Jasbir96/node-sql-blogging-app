@@ -39,7 +39,6 @@ const getByEntity = (searchObj) => {
             })
     })
 }
-
 const follow = (userId, followingId) => {
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO user_following 
@@ -53,6 +52,20 @@ const follow = (userId, followingId) => {
             });
     })
 }
+const unfollow = (userId, followingId) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`DELETE  FROM user_following 
+        WHERE u_id = ${userId} AND following_id = ${followingId}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create = create;
 module.exports.getByEntity = getByEntity;
-module.exports.follow=follow
+module.exports.follow=follow;
+module.exports.unfollow=unfollow;
