@@ -12,15 +12,45 @@ const protectRouteMiddleWare = async (req, res, next) => {
         } else {
             res.status(401).json({
                 status: "failure",
-                data: "kindly login to access"
+                message: "kindly login to access"
             });
         }
     } catch (err) {
         res.status(500).json({
-            message: err.message
+            message: err.message,
+            status:"failure"
+
         })
     }
 }
+const identifyIsSameUserMiddleware = (req, res, next) => {
+    try {
+        let loggedinUser = req.userId;
+        let assetOwner = req.body.auid;
+        if(assetOwner==undefined){
+        res.status(400).json({
+            status: "failure",
+            message:"bad request"})   
+            return;
+        }
+        if (loggedinUser == assetOwner) {
+            next()
+        } else {
+            res.status(401).json({
+            status: "failure",
+            message:"unauthorized access"
+        })   
+            return;
+        }
+    } catch (err) {
+        return res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
+
 module.exports={
-    protectRouteMiddleWare
+    protectRouteMiddleWare,
+    identifyIsSameUserMiddleware
 }
