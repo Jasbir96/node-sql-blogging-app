@@ -148,9 +148,20 @@ const updateBySlug = (slug, toUpdateObject) => {
             });
     })
 }
-
-
+const deleteBySlug = (slug) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`DELETE from articles WHERE slug = ${slug}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create=create;
 module.exports.getByEntity=getByEntity;
 module.exports.getAll=getAll;
 module.exports.updateBySlug=updateBySlug;
+module.exports.deleteBySlug=deleteBySlug;

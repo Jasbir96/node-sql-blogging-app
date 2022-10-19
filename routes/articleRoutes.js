@@ -3,7 +3,8 @@ const articleRouter = express.Router();
 const { protectRouteMiddleWare,identifyIsSameUserMiddleware} = require("../middlewares/auth");
 const {createArticleController,
     getArticleBySlugController,
-    getAllArticles,updateArticleController
+    getAllArticles,updateArticleController,
+    deleteArticleController
 } = require("../controllers/articleController");
 
 
@@ -15,6 +16,7 @@ articleRouter
 articleRouter
     .route('/:article-slug')
     .get(getArticleBySlugController)
-       .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, updateArticleController)
+    .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, updateArticleController)
+    .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, deleteArticleController)
 
 module.exports = articleRouter;

@@ -80,10 +80,10 @@ const updateArticleController = async function (req, res) {
     try {
         let updateObj = req.body;
         let articleSlug = req.params["article-slug"];
-        const updatedArticle = await articleModel.updateBySlug(articleSlug, updateObj);
+         await articleModel.updateBySlug(articleSlug, updateObj);
         res.status(200).json({
             status: "success",
-            data: updatedArticle
+            data: "article successfully updated"
         })
     }
     catch (err) {
@@ -93,9 +93,22 @@ const updateArticleController = async function (req, res) {
         })
     }
 }
+const deleteArticleController = async function (req, res) {
+    try {
+        let articleSlug = req.params["article-slug"];
+         await articleModel.deleteBySlug(articleSlug);
+        res.status(200).json({
+            status: "success",
+            data: "article deleted successfully"
+        })
+    } catch (err) {
+        return res.status(err.statusCode);
+    }
+}
 module.exports ={
     createArticleController,
     getArticleBySlugController,
     getAllArticles,
-    updateArticleController
+    updateArticleController,
+    deleteArticleController
 }
