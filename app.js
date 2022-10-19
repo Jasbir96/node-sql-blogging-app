@@ -1,6 +1,7 @@
 const express = require("express");
 const userRouter = require("./routes/userRoutes");
 const profileRouter = require("./routes/profileRoutes");
+const articleRouter = require("./routes/articleRoutes");
 
 const app = express();
 require("dotenv").config();
@@ -9,6 +10,8 @@ app.use(express.json());
 
 app.use("/users",userRouter);
 app.use("/profiles",profileRouter);
+app.use("/articles",articleRouter);
+
 
 
 
