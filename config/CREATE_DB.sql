@@ -34,3 +34,13 @@ FOREIGN KEY (a_slug) REFERENCES articles(slug) ON DELETE CASCADE,
 PRIMARY KEY (a_slug,name),
 INDEX (name)
 );
+
+
+CREATE TABLE IF NOT EXISTS likes (
+   u_id VARCHAR(255) NOT NULL,
+   article_slug  VARCHAR(255) NOT NULL ,
+   PRIMARY KEY (u_id, article_slug),
+   INDEX(article_slug),
+   FOREIGN KEY (u_id) REFERENCES users(id) ON DELETE CASCADE,
+   FOREIGN KEY (article_slug) REFERENCES articles(id) ON DELETE CASCADE
+)
