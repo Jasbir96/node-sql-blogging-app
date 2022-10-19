@@ -8,7 +8,7 @@ const {createArticleController,
 } = require("../controllers/articleController");
 const {likeArticleController,
     dislikeArticleController} =require("../controllers/articleController");
-const {articleAllCommentsController,createCommentController}=require("../controllers/articleController");
+const {articleAllCommentsController,createCommentController,deleteCommentController}=require("../controllers/articleController");
 //****************articles section*****************
 articleRouter
     .route("/")
@@ -28,5 +28,9 @@ articleRouter.route("/:article-slug/dislike")
 articleRouter.route("/:article-slug/comments")
 .get(articleAllCommentsController)
     .post(protectRouteMiddleWare,createCommentController);
+articleRouter.route("/:article-slug/comments/:comment-id")
+    .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, 
+        deleteCommentController);
+
 
 module.exports = articleRouter;

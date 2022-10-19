@@ -38,5 +38,19 @@ const getAllCommentsOfArticle = async (searchObj) => {
             })
     })
 }
+const deleteCommentOfArticle = async (id) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`DELETE from comments WHERE id = ${id}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create=create;
 module.exports.getAllCommentsOfArticle=getAllCommentsOfArticle;
+module.exports.deleteCommentOfArticle=deleteCommentOfArticle;
+
