@@ -55,7 +55,29 @@ const getArticleBySlugController = async function (req, res) {
         })
     }
 }
+const getAllArticles = async function (req, res) {
+    try {
+        const articles = await articleModel.getAll(req.query);
+        if (articles == null) {
+            res.status(404).json({
+                status: "failure",
+                data: "articles not found"
+            })
+            return;
+        }
+        res.status(200).json({
+            status: "success",
+            data: article
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports ={
     createArticleController,
-    getArticleBySlugController
+    getArticleBySlugController,
+    getAllArticles
 }

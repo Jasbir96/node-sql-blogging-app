@@ -58,5 +58,48 @@ const getByEntity = (searchObj) => {
             })
     })
 }
+const getAll = (searchObj) => {
+    const page = searchObj.page||1
+    searchObj.page = undefined;
+    const size = searchObj.size||2
+    searchObj.size = size;
+    let tags = searchObj.tags || [];
+    tags = "(" + tags.join(",") + ")";
+    searchObj.tags = undefined;
+    for (let attr in searchObj) {
+        console.log(searchObj[attr]);
+        searchString += `${attr} = "${searchObj[attr]}", `
+    }
+    searchString = searchString.substring(0, searchString.length - 2);
+    return new Promise(function (resolve, reject) {
+        let slugArr = [];
+        connection.query(`SELECT a_slug from  article_tags WHERE name IN ${tags}`,
+            function (err, res) {
+                if (err) {
+                    reject(err);
+                } else {
+                    slugArr = "(" + res.join(",") + ")";
+                    let queryString = "";
+                    const offset = (page - 1) * size;
+                    if (res.length > 0) {
+                        queryString = ` AND slug IN ${slugArr} `;
+                    }
+                    connection.query(`SELECT * from articles WHERE ${searchString} 
+                    ${queryString} AND LIMIT ${size} OFFSET ${offset}
+                    `,
+                        function (err, res) {
+                            if (err) {
+                                reject(err)
+                                return;
+                            } else {
+                                resolve(res[0]);
+                            }
+                        })
+                }
+            })
+    })
+}
+
 module.exports.create=create;
 module.exports.getByEntity=getByEntity;
+module.exports.getAll=getAll;
