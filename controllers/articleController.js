@@ -76,8 +76,26 @@ const getAllArticles = async function (req, res) {
         })
     }
 }
+const updateArticleController = async function (req, res) {
+    try {
+        let updateObj = req.body;
+        let articleSlug = req.params["article-slug"];
+        const updatedArticle = await articleModel.updateBySlug(articleSlug, updateObj);
+        res.status(200).json({
+            status: "success",
+            data: updatedArticle
+        })
+    }
+    catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports ={
     createArticleController,
     getArticleBySlugController,
-    getAllArticles
+    getAllArticles,
+    updateArticleController
 }
