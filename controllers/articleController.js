@@ -32,7 +32,30 @@ const createArticleController = async function (req, res) {
         });
     }
 }
-
+const getArticleBySlugController = async function (req, res) {
+    try {
+        const articleSlug = req.params["article-slug"];
+        const article = await articleModel.getByEntity({ slug: articleSlug });
+        if (article == null) {
+            res.status(404).json({
+                status: "failure",
+                data: "article not found"
+            })
+        } else {
+            res.status(200).json({
+                status: "success",
+                data: article
+            })
+        }
+    }
+    catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports ={
-    createArticleController
+    createArticleController,
+    getArticleBySlugController
 }

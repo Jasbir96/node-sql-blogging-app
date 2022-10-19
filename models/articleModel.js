@@ -37,4 +37,26 @@ const create = async (articleObj) => {
         })
     })
 }
+const getByEntity = (searchObj) => {
+    // console.log(uid);
+    let searchString = '';
+    // console.log(toUpdateObject);
+    for (let attr in searchObj) {
+        console.log(searchObj[attr]);
+        searchString += `${attr} = "${searchObj[attr]}", `
+    }
+    searchString = searchString.substring(0, searchString.length - 2);
+    return new Promise(function (resolve, reject) {
+        connection.query(`SELECT * from articles WHERE ${searchString}} `,
+            function (err, res) {
+                if (err) {
+                    reject(err)
+                    return;
+                } else {
+                    resolve(res[0]);
+                }
+            })
+    })
+}
 module.exports.create=create;
+module.exports.getByEntity=getByEntity;
