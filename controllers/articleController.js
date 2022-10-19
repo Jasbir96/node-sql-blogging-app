@@ -225,6 +225,24 @@ const deleteCommentController = async function (req, res) {
     }
 }
 
+const updateCommentController = async function (req, res) {
+    try {
+        let commentId = req.params["comment-id"];
+        let updateObj=req.body;
+        const deletedComment =
+            await commentModel.updateCommentOfArticle(commentId,req.body);
+        res.status(200).json({
+            status: "success",
+            data: deletedComment
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
+
 module.exports ={
     createArticleController,
     getArticleBySlugController,
@@ -236,5 +254,6 @@ module.exports ={
     dislikeArticleController,
     createCommentController,
     articleAllCommentsController,
-    deleteCommentController
+    deleteCommentController,
+    updateCommentController
 }

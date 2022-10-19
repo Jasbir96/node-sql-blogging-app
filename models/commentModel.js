@@ -50,7 +50,30 @@ const deleteCommentOfArticle = async (id) => {
             });
     })
 }
+const updateCommentOfArticle = async (id,toUpdateObject) => {
+    let updateString = '';
+    // tags are removed 
+    let tags = toUpdateObject.tags;
+    toUpdateObject.tags = undefined;
+    // console.log(toUpdateObject);
+    for (let attr in toUpdateObject) {
+        console.log(toUpdateObject[attr]);
+        updateString += `${attr}="${toUpdateObject[attr]}", `
+    }
+    updateString = updateString.substring(0,updateString.length - 2);
+     return new Promise(function (resolve, reject) {
+        connection.query(`UPDATE  comments SET ${updateString} WHERE id = ${id}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create=create;
 module.exports.getAllCommentsOfArticle=getAllCommentsOfArticle;
 module.exports.deleteCommentOfArticle=deleteCommentOfArticle;
+module.exports.updateCommentOfArticle=updateCommentOfArticle;
 

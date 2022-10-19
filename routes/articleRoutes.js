@@ -8,7 +8,9 @@ const {createArticleController,
 } = require("../controllers/articleController");
 const {likeArticleController,
     dislikeArticleController} =require("../controllers/articleController");
-const {articleAllCommentsController,createCommentController,deleteCommentController}=require("../controllers/articleController");
+const {articleAllCommentsController,createCommentController,deleteCommentController,
+updateCommentController
+}=require("../controllers/articleController");
 //****************articles section*****************
 articleRouter
     .route("/")
@@ -24,11 +26,13 @@ articleRouter.route("/:article-slug/like")
     .post(protectRouteMiddleWare, likeArticleController);
 articleRouter.route("/:article-slug/dislike")
     .post(protectRouteMiddleWare, dislikeArticleController);
-// ****************comments section*****************
+// ****************comments section**********************
 articleRouter.route("/:article-slug/comments")
 .get(articleAllCommentsController)
     .post(protectRouteMiddleWare,createCommentController);
 articleRouter.route("/:article-slug/comments/:comment-id")
+.patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, 
+        updateCommentController)
     .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, 
         deleteCommentController);
 
