@@ -18,5 +18,25 @@ const create = async (uid, articleSlug) => {
             })
     })
 }
-
+const getAllCommentsOfArticle = async (searchObj) => {
+    const page = searchObj.page ;
+    searchObj.page = undefined;
+    const size = searchObj.size ;
+    searchObj.size = size;
+    const offset = (page - 1) * size;
+    return new Promise(function (resolve, reject) {
+        connection
+        .query
+        (`SELECT * from comments WHERE article_slug=${searchObj.articleSlug}
+        AND LIMIT ${size} OFFSET ${offset}`,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            })
+    })
+}
 module.exports.create=create;
+module.exports.getAllCommentsOfArticle=getAllCommentsOfArticle;

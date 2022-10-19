@@ -162,6 +162,9 @@ const dislikeArticleController = async function (req, res) {
         })
     }
 }
+
+
+// **************comments section ****************
 const createCommentController = async function (req, res) {
     try {
         const articleSlug = req.params["article-slug"];
@@ -178,6 +181,34 @@ const createCommentController = async function (req, res) {
         })
     }
 }
+const articleAllCommentsController = async function (req, res) {
+    try {
+        let articleSlug = req.params["article-slug"];
+        let page = searchObj.page||1;
+        let size = searchObj.size||10;
+        const searchObj = { articleSlug, page, size };
+        const comments = await commentModel.getAllCommentsOfArticle(searchObj);
+            if(comments.length==0){
+                       res.status(404).json({
+                        status: "failure",
+                        message: "No comments were found"
+                       }) 
+                return;
+            }
+        res.status(200).json({
+            status:"success",
+            message:comments
+        })
+
+
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
+
 module.exports ={
     createArticleController,
     getArticleBySlugController,
@@ -187,5 +218,6 @@ module.exports ={
     feedController,
     likeArticleController,
     dislikeArticleController,
-    createCommentController
+    createCommentController,
+    articleAllCommentsController
 }
