@@ -213,7 +213,19 @@ const like = (userId, articleSlug) => {
             });
     })
 }
-
+const dislike = (userId, articleSlug) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`DELETE  FROM likes 
+        WHERE u_id = ${userId} AND article_slug = ${articleSlug} `,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 module.exports.create=create;
 module.exports.getByEntity=getByEntity;
 module.exports.getAll=getAll;
@@ -221,3 +233,4 @@ module.exports.updateBySlug=updateBySlug;
 module.exports.deleteBySlug=deleteBySlug;
 module.exports.feed=feed;
 module.exports.like=like;
+module.exports.dislike=dislike;

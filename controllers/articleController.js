@@ -144,7 +144,23 @@ const likeArticleController = async function (req, res) {
         })
     }
 }
+const dislikeArticleController = async function (req, res) {
+    try {
+        let userId = req.userId;
+        let articleSlug = req.params["article-slug"];
 
+        await articleModel.dislike(userId, articleSlug);
+        res.status(200).json({
+            status: "success",
+            result: "you are have now disliked the post"
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports ={
     createArticleController,
     getArticleBySlugController,
@@ -152,5 +168,6 @@ module.exports ={
     updateArticleController,
     deleteArticleController,
     feedController,
-    likeArticleController
+    likeArticleController,
+    dislikeArticleController
 }

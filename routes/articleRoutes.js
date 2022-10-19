@@ -5,9 +5,9 @@ const {createArticleController,
     getArticleBySlugController,
     getAllArticles,updateArticleController,
     deleteArticleController,
-    likeArticleController
+    likeArticleController,
+    dislikeArticleController,
 } = require("../controllers/articleController");
-
 
 //****************articles section*****************
 articleRouter
@@ -22,5 +22,7 @@ articleRouter
 // ****************like and dislike section****************
 articleRouter.route("/:article-slug/like")
     .post(protectRouteMiddleWare, likeArticleController);
+articleRouter.route("/:article-slug/dislike")
+    .post(protectRouteMiddleWare, dislikeArticleController);
 
 module.exports = articleRouter;
