@@ -160,8 +160,49 @@ const deleteBySlug = (slug) => {
             });
     })
 }
+const feed = (userId, page, size) => {
+    const page = searchObj.page || 1;
+    const size = searchObj.size || 10;
+    return new Promise(function (resolve, reject) {
+        connection.query(`SELECT following_id from user_following WHERE
+        u_id=${userId}`, function (err, result) {
+            if (err) {
+                reject(err);
+            } else {
+                let followingArr = "(" + result.join(",") + ")";
+                let offset = (page - 1) * size
+                connection.query(`SELECT * from articles WHERE author_id IN ${followingArr}
+                LIMIT ${size} OFFSET ${offset}
+                `, function (err, res) {
+                    if (res.length == size) {
+                        resolve(res);
+                    } else if (res.length != 0) {
+                        // rest get kar lo aur append kr do 
+                        connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArr}
+                                    LIMIT ${size - res.length}`, function (err, respub) {
+                            resolve([...res, ...respub,]);
+                        });
+                    } else {
+                        // page: 3
+                        connection.query(`SELECT COUNT(*) from articles WHERE author_id NOT IN ${followingArr}`, function (err, res) {
+                            let actualOffset = (page - 1) * size;
+                            let offsetForNonFollowing = actualOffset - res;
+                            connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArr}
+                        LIMIT ${size} OFFSET ${offsetForNonFollowing}`, function (err, res) {
+                                resolve(res);
+                            });
+                        })
+                    }
+                })
+
+            }
+        })
+    })
+}
+
 module.exports.create=create;
 module.exports.getByEntity=getByEntity;
 module.exports.getAll=getAll;
 module.exports.updateBySlug=updateBySlug;
 module.exports.deleteBySlug=deleteBySlug;
+module.exports.feed=feed;

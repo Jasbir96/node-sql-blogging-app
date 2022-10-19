@@ -106,10 +106,33 @@ const deleteArticleController = async function (req, res) {
         return res.status(err.statusCode);
     }
 }
+const feedController = async function (req, res) {
+    try {
+        const articles = await articleModel.feed(req.query);
+        if (articles == null) {
+            res.status(404).json({
+                status: "failure",
+                data: "articles not found"
+            })
+            return;
+        }
+        res.status(200).json({
+            status: "success",
+            data: article
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
+
 module.exports ={
     createArticleController,
     getArticleBySlugController,
     getAllArticles,
     updateArticleController,
-    deleteArticleController
+    deleteArticleController,
+    feedController
 }
