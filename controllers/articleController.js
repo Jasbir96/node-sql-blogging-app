@@ -1,4 +1,5 @@
 const articleModel = require("../models/articleModel");
+const commentModel = require("../models/commentModel");
 
 const createArticleController = async function (req, res) {
     try {
@@ -161,6 +162,22 @@ const dislikeArticleController = async function (req, res) {
         })
     }
 }
+const createCommentController = async function (req, res) {
+    try {
+        const articleSlug = req.params["article-slug"];
+        const userId = req.userId
+        const comment = await commentModel.create(articleSlug, userId);
+        res.status(200).json({
+            status: "success",
+            result: comment
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 module.exports ={
     createArticleController,
     getArticleBySlugController,
@@ -169,5 +186,6 @@ module.exports ={
     deleteArticleController,
     feedController,
     likeArticleController,
-    dislikeArticleController
+    dislikeArticleController,
+    createCommentController
 }

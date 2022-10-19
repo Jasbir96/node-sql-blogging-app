@@ -6,7 +6,9 @@ const {createArticleController,
     getAllArticles,updateArticleController,
     deleteArticleController,
 } = require("../controllers/articleController");
-const {likeArticleController,dislikeArticleController} =require("../controllers/articleController");
+const {likeArticleController,
+    dislikeArticleController,createCommentController} =require("../controllers/articleController");
+
 //****************articles section*****************
 articleRouter
     .route("/")
@@ -22,8 +24,8 @@ articleRouter.route("/:article-slug/like")
     .post(protectRouteMiddleWare, likeArticleController);
 articleRouter.route("/:article-slug/dislike")
     .post(protectRouteMiddleWare, dislikeArticleController);
-
 // ****************comments section*****************
-
+articleRouter.route("/:article-slug/comments")
+    .post(protectRouteMiddleWare,createCommentController);
 
 module.exports = articleRouter;
