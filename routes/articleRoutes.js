@@ -4,7 +4,8 @@ const { protectRouteMiddleWare,identifyIsSameUserMiddleware} = require("../middl
 const {createArticleController,
     getArticleBySlugController,
     getAllArticles,updateArticleController,
-    deleteArticleController
+    deleteArticleController,
+    likeArticleController
 } = require("../controllers/articleController");
 
 
@@ -18,5 +19,8 @@ articleRouter
     .get(getArticleBySlugController)
     .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, updateArticleController)
     .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, deleteArticleController)
+// ****************like and dislike section****************
+articleRouter.route("/:article-slug/like")
+    .post(protectRouteMiddleWare, likeArticleController);
 
 module.exports = articleRouter;

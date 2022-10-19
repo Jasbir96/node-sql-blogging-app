@@ -199,6 +199,20 @@ const feed = (userId, page, size) => {
         })
     })
 }
+const like = (userId, articleSlug) => {
+    return new Promise(function (resolve, reject) {
+        connection.query(`INSERT INTO likes 
+        SET u_id = ${userId}, article_slug = ${articleSlug} `,
+            function (err, result) {
+                if (err) {
+                    reject(err)
+                    return;
+                } else {
+                    resolve(result);
+                }
+            });
+    })
+}
 
 module.exports.create=create;
 module.exports.getByEntity=getByEntity;
@@ -206,3 +220,4 @@ module.exports.getAll=getAll;
 module.exports.updateBySlug=updateBySlug;
 module.exports.deleteBySlug=deleteBySlug;
 module.exports.feed=feed;
+module.exports.like=like;

@@ -127,6 +127,23 @@ const feedController = async function (req, res) {
         })
     }
 }
+const likeArticleController = async function (req, res) {
+    try {
+        let userId = req.userId;
+        // the user i want to follow;
+        let articleSlug = req.params["article-slug"];
+        await articleModel.like(userId, articleSlug);
+        res.status(201).json({
+            status: "success",
+            result: "you are have now liked the post"
+        })
+    } catch (err) {
+        res.status(500).json({
+            status: "failure",
+            err: err.message
+        })
+    }
+}
 
 module.exports ={
     createArticleController,
@@ -134,5 +151,6 @@ module.exports ={
     getAllArticles,
     updateArticleController,
     deleteArticleController,
-    feedController
+    feedController,
+    likeArticleController
 }
