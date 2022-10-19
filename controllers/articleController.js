@@ -2,10 +2,11 @@ const articleModel = require("../models/articleModel");
 
 const createArticleController = async function (req, res) {
     try {
+       
         if(req.body.title===undefined||
             req.body.body===undefined||
             req.body.sub_title===undefined||
-            req.body.author_id===undefined||req.body.tags===undefined)
+            req.body.tags===undefined)
             {
             res.status(400)
             .json({
@@ -18,7 +19,7 @@ const createArticleController = async function (req, res) {
             title: req.body.title,
             body: req.body.body,
             sub_title: req.body.sub_title,
-            author_id: req.body.author_id,
+            author_id: req.userId,
             tags: req.body.tags
         })
         res.status(201).json({
