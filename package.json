@@ -4,7 +4,8 @@
   "description": "A web application for blogging which has built in capabilities to handle various users. where users can create blogs, like them comment them and follow each other.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"nodemon app.js"
   },
   "repository": {
     "type": "git",

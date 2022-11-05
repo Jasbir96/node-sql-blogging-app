@@ -161,8 +161,8 @@ const deleteBySlug = (slug) => {
     })
 }
 const feed = (userId, page, size) => {
-    const page = searchObj.page || 1;
-    const size = searchObj.size || 10;
+    page = page || 1;
+    size = size || 10;
     return new Promise(function (resolve, reject) {
         connection.query(`SELECT following_id from user_following WHERE
         u_id=${userId}`, function (err, result) {
