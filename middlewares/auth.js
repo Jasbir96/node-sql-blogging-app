@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const protectRouteMiddleWare = async (req, res, next) => {
     try {
         // you are bringing the token to get your response
-        let decryptedToken = jwt.verify(req.cookies.JWT, process.env.JWT_SECRET);
+        let decryptedToken = jwt.verify(req.cookies.jwt, process.env.JWT_SECRET);
         if (decryptedToken) {
             let userId = decryptedToken.id;
             //setting userId for other controller function so they can identify user also 
