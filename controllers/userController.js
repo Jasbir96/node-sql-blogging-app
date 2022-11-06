@@ -17,7 +17,7 @@ const createUserController = async function (req, res) {
             return;
         }
         const newUser = await userModel.create(userObj);
-        newUser.password = undefined;
+        newUser["password_hash"] = undefined;
         res.status(201).json({
             status: "success",
             message: userObj

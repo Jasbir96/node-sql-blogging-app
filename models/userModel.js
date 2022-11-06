@@ -5,8 +5,9 @@ const bcrypt = require("bcrypt");
 const create = async (userObj) => {
     // insert 
     userObj.id = uuidv4();
-    userObj.password = await bcrypt.hash(userObj.password, 10);
+    userObj["password_hash"] = await bcrypt.hash(userObj.password,10);
     userObj.confirmPassword = undefined;
+    userObj.password=undefined
     // create user 
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO users SET ?`, userObj, function (err, res) {
