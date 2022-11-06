@@ -59,7 +59,7 @@ const offset = (page - 1)*size;
 const follow = (userId, followingId) => {
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO user_following 
-        SET u_id = ${userId},following_id = ${followingId}`,
+        SET u_id = '${userId}',following_id = '${followingId}'`,
             function (err, result) {
                 if (err) {
                     reject(err)
@@ -72,10 +72,10 @@ const follow = (userId, followingId) => {
 const unfollow = (userId, followingId) => {
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE  FROM user_following 
-        WHERE u_id = ${userId} AND following_id = ${followingId}`,
+        WHERE u_id = '${userId}' AND following_id = '${followingId}'`,
             function (err, result) {
                 if (err) {
-                    reject(err)
+                    reject(err);
                 } else {
                     resolve(result);
                 }
