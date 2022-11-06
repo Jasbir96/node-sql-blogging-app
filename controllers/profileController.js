@@ -9,6 +9,10 @@ const getProfileByUserName = async function (req, res) {
                 message:"User not found"
              });
         }
+        res.status(200).json({
+            status:"success",
+            message:user
+        })
     } catch (err) {
         res.status(500).json({
             status: "failure",
