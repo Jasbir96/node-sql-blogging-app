@@ -13,11 +13,10 @@ const createUserController = async function (req, res) {
     res.status(400).json({
             status: "failure",
             message:"some required fields are missing"})   
-
             return;
         }
     await userModel.create(userObj);
-                res.status(201).json({
+    res.status(201).json({
             status: "success",
             message: "user created"
         })
@@ -45,8 +44,8 @@ const loginUserController = async function (req, res) {
             message:"user does not exist kindly signup"})
             return;            
         }
-        let res = await bcrypt.compare(user.password, password);
-        if (!res) {
+        let result = await bcrypt.compare(password,user["password_hash"]);
+        if (!result) {
             res.status(401).json({
             status: "failure",
             message:"email or password is incorrect"}) 
@@ -57,12 +56,13 @@ const loginUserController = async function (req, res) {
         res.cookie("jwt", token, {
             httpOnly: true,
         })
-        user.password = undefined;
+
         res.status(200).json({
             status: "success",
             message:user
         })
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             message: err.message,
             status:"failure"

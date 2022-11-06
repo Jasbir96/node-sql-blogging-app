@@ -28,8 +28,9 @@ const getByEntity = (searchObj) => {
     }
     // to remove extra comma
     searchString = searchString.substring(0, searchString.length - 2);
+    console.log(searchString);
     return new Promise(function (resolve, reject) {
-        connection.query(`SELECT * from users WHERE ${searchString}}`,
+        connection.query(`SELECT * from users WHERE ${searchString}`,
             function (err, res) {
                 if (err) {
                     reject(err)
