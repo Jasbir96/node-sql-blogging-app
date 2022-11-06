@@ -45,7 +45,7 @@ const getByEntity = (searchObj) => {
 const getAll = (page,size) => {
 const offset = (page - 1)*size;
     return new Promise(function (resolve, reject) {
-        connection.query(`SELECT * from users AND LIMIT ${size} OFFSET ${offset}`,
+        connection.query(`SELECT * from users LIMIT ${size} OFFSET ${offset}`,
             function (err, res) {
                 if (err) {
                     reject(err)
