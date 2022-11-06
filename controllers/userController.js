@@ -16,11 +16,10 @@ const createUserController = async function (req, res) {
 
             return;
         }
-        const newUser = await userModel.create(userObj);
-        newUser["password_hash"] = undefined;
-        res.status(201).json({
+    await userModel.create(userObj);
+                res.status(201).json({
             status: "success",
-            message: userObj
+            message: "user created"
         })
     } catch (err) {
         res.status(500).json({
