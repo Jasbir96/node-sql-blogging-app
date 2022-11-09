@@ -25,7 +25,7 @@ const createArticleController = async function (req, res) {
         })
         res.status(201).json({
             status: "success",
-            message:article
+            message:"article created successfully"
         });
     } catch (err) {
         return res.status(500).json({

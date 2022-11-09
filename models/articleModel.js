@@ -7,6 +7,8 @@ const create = async (articleObj) => {
      // insert 
     articleObj.id = uuidv4();
     articleObj.slug = slug(articleObj.title);
+    const tags =articleObj.tags;
+    delete articleObj.tags
     // create user 
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO articles SET ?`, articleObj, function (err, res) {
@@ -15,21 +17,18 @@ const create = async (articleObj) => {
                 return;
             } else {
                 // insert tags in article_tags db 
-                let article = res;
+                console.log("Hello");
                 const entries = [];
-                for (let i = 0; i < articleObj.tags.length; i++) {
-                    let tag = articleObj.tags[i];
+                for (let i = 0; i < tags.length; i++) {
+                    let tag = tags[i];
                     entries.push([articleObj.slug, tag]);
                 }
                 const tagsTableSql = "INSERT INTO article_tags (a_slug,name) VALUES ?";
-                connection.query(tagsTableSql, entries, function (err, res) {
+                connection.query(tagsTableSql, [entries], function (err, res) {
                     if (err) {
                         reject(err);
-                
                     } else {
-                        article.tags = res
-                        resolve(article);
-                    
+                        resolve(res);
                     }
                 })
 
