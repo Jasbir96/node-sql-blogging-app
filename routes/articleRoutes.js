@@ -27,7 +27,7 @@ articleRouter.route("/:article_slug/like")
 articleRouter.route("/:article_slug/dislike")
     .post(protectRouteMiddleWare, dislikeArticleController);
 // ****************comments section**********************
-articleRouter.route("/:article-slug/comments")
+articleRouter.route("/:article_slug/comments")
 .get(articleAllCommentsController)
     .post(protectRouteMiddleWare,createCommentController);
 articleRouter.route("/:article-slug/comments/:comment-id")

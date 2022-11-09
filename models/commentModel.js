@@ -2,16 +2,16 @@ const connection = require("../config/connection");
 const { v4: uuidv4 } = require('uuid');
 
 // create
-const create = async (uid, articleSlug) => {
+const create = async (articleSlug,uid,content) => {
     // insert 
     const id = uuidv4(); 
+    console.log("articleSlug:",articleSlug,"uid:",uid,"content:",content);
     return new Promise(function (resolve, reject) {
-        connection.query(`INSERT INTO comments SET id=${id} 
-        article_slug=${articleSlug} ,u_id=${uid}`,
+        connection.query(`INSERT INTO comments SET id="${id}", article_slug="${articleSlug}", u_id="${uid}", content="${content}"`,
             function (err, res) {
                 if (err) {
-                    reject(err)
-            
+                    console.log(err);
+                    reject(err);
                 } else {
                     resolve(res);
                 }
@@ -25,9 +25,7 @@ const getAllCommentsOfArticle = async (searchObj) => {
     searchObj.size = size;
     const offset = (page - 1) * size;
     return new Promise(function (resolve, reject) {
-        connection
-        .query
-        (`SELECT * from comments WHERE article_slug=${searchObj.articleSlug}
+        connection.query(`SELECT * from comments WHERE article_slug=${searchObj.articleSlug}
         AND LIMIT ${size} OFFSET ${offset}`,
             function (err, result) {
                 if (err) {

@@ -162,17 +162,16 @@ const dislikeArticleController = async function (req, res) {
         })
     }
 }
-
-
 // **************comments section ****************
 const createCommentController = async function (req, res) {
     try {
-        const articleSlug = req.params["article-slug"];
-        const userId = req.userId
-        const comment = await commentModel.create(articleSlug, userId);
+        const articleSlug = req.params["article_slug"];
+        const userId = req.userId;
+        const content =req.body.content;
+        await commentModel.create(articleSlug, userId,content);
         res.status(200).json({
             status: "success",
-            result: comment
+            result: "comment created successfully"
         })
     } catch (err) {
         res.status(500).json({
