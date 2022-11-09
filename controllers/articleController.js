@@ -36,7 +36,7 @@ const createArticleController = async function (req, res) {
 }
 const getArticleBySlugController = async function (req, res) {
     try {
-        const articleSlug = req.params["article-slug"];
+        const articleSlug = req.params["article_slug"];
         const article = await articleModel.getByEntity({ slug: articleSlug });
         if (article == null) {
             res.status(404).json({

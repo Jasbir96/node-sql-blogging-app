@@ -17,7 +17,7 @@ articleRouter
     .post(protectRouteMiddleWare, createArticleController)
     .get(getAllArticles);
 articleRouter
-    .route('/:article-slug')
+    .route('/:article_slug')
     .get(getArticleBySlugController)
     .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, updateArticleController)
     .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, deleteArticleController)

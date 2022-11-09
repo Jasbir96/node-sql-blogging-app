@@ -46,7 +46,7 @@ const getByEntity = (searchObj) => {
     }
     searchString = searchString.substring(0, searchString.length - 2);
     return new Promise(function (resolve, reject) {
-        connection.query(`SELECT * from articles WHERE ${searchString}} `,
+        connection.query(`SELECT * from articles WHERE ${searchString} `,
             function (err, res) {
                 if (err) {
                     reject(err)
