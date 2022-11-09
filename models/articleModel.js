@@ -215,7 +215,7 @@ const like = (userId, articleSlug) => {
 const dislike = (userId, articleSlug) => {
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE  FROM likes 
-        WHERE u_id = ${userId} AND article_slug = ${articleSlug} `,
+        WHERE u_id = "${userId}" AND article_slug = "${articleSlug}" `,
             function (err, result) {
                 if (err) {
                     reject(err)

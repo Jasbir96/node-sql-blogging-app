@@ -148,7 +148,7 @@ const likeArticleController = async function (req, res) {
 const dislikeArticleController = async function (req, res) {
     try {
         let userId = req.userId;
-        let articleSlug = req.params["article-slug"];
+        let articleSlug = req.params["article_slug"];
 
         await articleModel.dislike(userId, articleSlug);
         res.status(200).json({

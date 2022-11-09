@@ -24,7 +24,7 @@ articleRouter
 // ****************like and dislike section****************
 articleRouter.route("/:article_slug/like")
     .post(protectRouteMiddleWare, likeArticleController);
-articleRouter.route("/:article-slug/dislike")
+articleRouter.route("/:article_slug/dislike")
     .post(protectRouteMiddleWare, dislikeArticleController);
 // ****************comments section**********************
 articleRouter.route("/:article-slug/comments")
