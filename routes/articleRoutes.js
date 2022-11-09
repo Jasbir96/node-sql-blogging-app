@@ -30,7 +30,7 @@ articleRouter.route("/:article_slug/dislike")
 articleRouter.route("/:article_slug/comments")
 .get(articleAllCommentsController)
     .post(protectRouteMiddleWare,createCommentController);
-articleRouter.route("/:article-slug/comments/:comment-id")
+articleRouter.route("/:article_slug/comments/:comment_id")
 .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, 
         updateCommentController)
     .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, 

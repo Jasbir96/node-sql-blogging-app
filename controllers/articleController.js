@@ -227,13 +227,11 @@ const deleteCommentController = async function (req, res) {
 
 const updateCommentController = async function (req, res) {
     try {
-        let commentId = req.params["comment-id"];
-        let updateObj=req.body;
-        const deletedComment =
-            await commentModel.updateCommentOfArticle(commentId,req.body);
+        let commentId = req.params["comment_id"];
+        await commentModel.updateCommentOfArticle(commentId,req.body.content);
         res.status(200).json({
             status: "success",
-            data: deletedComment
+            data: "comment updated successfully"
         })
     } catch (err) {
         res.status(500).json({

@@ -48,19 +48,9 @@ const deleteCommentOfArticle = async (id) => {
             });
     })
 }
-const updateCommentOfArticle = async (id,toUpdateObject) => {
-    let updateString = '';
-    // tags are removed 
-    let tags = toUpdateObject.tags;
-    toUpdateObject.tags = undefined;
-    // console.log(toUpdateObject);
-    for (let attr in toUpdateObject) {
-        console.log(toUpdateObject[attr]);
-        updateString += `${attr}="${toUpdateObject[attr]}", `
-    }
-    updateString = updateString.substring(0,updateString.length - 2);
+const updateCommentOfArticle = async (id,content) => {
      return new Promise(function (resolve, reject) {
-        connection.query(`UPDATE  comments SET ${updateString} WHERE id = ${id}`,
+        connection.query(`UPDATE  comments SET content ="${content}" WHERE id = "${id}"`,
             function (err, result) {
                 if (err) {
                     reject(err)
