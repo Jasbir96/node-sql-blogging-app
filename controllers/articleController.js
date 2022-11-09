@@ -59,6 +59,7 @@ const getArticleBySlugController = async function (req, res) {
 }
 const getAllArticles = async function (req, res) {
     try {
+      req.query.tags= req.query.tags==undefined?[]: req.query.tags.split(",");
         const articles = await articleModel.getAll(req.query);
         if (articles == null) {
             res.status(404).json({
@@ -69,9 +70,10 @@ const getAllArticles = async function (req, res) {
         }
         res.status(200).json({
             status: "success",
-            data: article
+            data: articles
         })
     } catch (err) {
+        console.log(err);
         res.status(500).json({
             status: "failure",
             err: err.message

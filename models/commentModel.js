@@ -5,7 +5,6 @@ const { v4: uuidv4 } = require('uuid');
 const create = async (articleSlug,uid,content) => {
     // insert 
     const id = uuidv4(); 
-    console.log("articleSlug:",articleSlug,"uid:",uid,"content:",content);
     return new Promise(function (resolve, reject) {
         connection.query(`INSERT INTO comments SET id="${id}", article_slug="${articleSlug}", u_id="${uid}", content="${content}"`,
             function (err, res) {
