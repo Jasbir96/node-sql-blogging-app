@@ -20,13 +20,13 @@ const create = async (articleSlug,uid,content) => {
 }
 const getAllCommentsOfArticle = async (searchObj) => {
     const page = searchObj.page ;
-    searchObj.page = undefined;
+   delete searchObj.page; 
     const size = searchObj.size ;
-    searchObj.size = size;
+    delete searchObj.size;
     const offset = (page - 1) * size;
     return new Promise(function (resolve, reject) {
-        connection.query(`SELECT * from comments WHERE article_slug=${searchObj.articleSlug}
-        AND LIMIT ${size} OFFSET ${offset}`,
+        connection.query(`SELECT * from comments WHERE article_slug="${searchObj.articleSlug}"
+        LIMIT ${size} OFFSET ${offset}`,
             function (err, result) {
                 if (err) {
                     reject(err)
@@ -38,7 +38,7 @@ const getAllCommentsOfArticle = async (searchObj) => {
 }
 const deleteCommentOfArticle = async (id) => {
     return new Promise(function (resolve, reject) {
-        connection.query(`DELETE from comments WHERE id = ${id}`,
+        connection.query(`DELETE from comments WHERE id = "${id}"`,
             function (err, result) {
                 if (err) {
                     reject(err)

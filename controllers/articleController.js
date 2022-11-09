@@ -182,9 +182,9 @@ const createCommentController = async function (req, res) {
 }
 const articleAllCommentsController = async function (req, res) {
     try {
-        let articleSlug = req.params["article-slug"];
-        let page = searchObj.page||1;
-        let size = searchObj.size||10;
+        let articleSlug = req.params["article_slug"];
+        let page = req.query.page||1;
+        let size = req.query.size||10;
         const searchObj = { articleSlug, page, size };
         const comments = await commentModel.getAllCommentsOfArticle(searchObj);
             if(comments.length==0){
@@ -194,6 +194,7 @@ const articleAllCommentsController = async function (req, res) {
                        }) 
                 return;
             }
+
         res.status(200).json({
             status:"success",
             message:comments
