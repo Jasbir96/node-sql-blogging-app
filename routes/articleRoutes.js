@@ -22,7 +22,7 @@ articleRouter
     .patch(protectRouteMiddleWare, identifyIsSameUserMiddleware, updateArticleController)
     .delete(protectRouteMiddleWare, identifyIsSameUserMiddleware, deleteArticleController)
 // ****************like and dislike section****************
-articleRouter.route("/:article-slug/like")
+articleRouter.route("/:article_slug/like")
     .post(protectRouteMiddleWare, likeArticleController);
 articleRouter.route("/:article-slug/dislike")
     .post(protectRouteMiddleWare, dislikeArticleController);

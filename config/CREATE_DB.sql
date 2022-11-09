@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS likes (
    PRIMARY KEY (u_id, article_slug),
    INDEX(article_slug),
    FOREIGN KEY (u_id) REFERENCES users(id) ON DELETE CASCADE,
-   FOREIGN KEY (article_slug) REFERENCES articles(id) ON DELETE CASCADE
+   FOREIGN KEY (article_slug) REFERENCES articles(slug) ON DELETE CASCADE
 )
 
 CREATE TABLE IF NOT EXISTS comments (

@@ -132,7 +132,7 @@ const likeArticleController = async function (req, res) {
     try {
         let userId = req.userId;
         // the user i want to follow;
-        let articleSlug = req.params["article-slug"];
+        let articleSlug = req.params["article_slug"];
         await articleModel.like(userId, articleSlug);
         res.status(201).json({
             status: "success",

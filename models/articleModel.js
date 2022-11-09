@@ -200,10 +200,10 @@ const feed = (userId, page, size) => {
 }
 const like = (userId, articleSlug) => {
     return new Promise(function (resolve, reject) {
-        connection.query(`INSERT INTO likes 
-        SET u_id = ${userId}, article_slug = ${articleSlug} `,
+        connection.query(`INSERT INTO likes SET u_id = "${userId}", article_slug = "${articleSlug}" `,
             function (err, result) {
                 if (err) {
+                    console.log(err);
                     reject(err)
                     return;
                 } else {
