@@ -210,12 +210,12 @@ const articleAllCommentsController = async function (req, res) {
 }
 const deleteCommentController = async function (req, res) {
     try {
-        let commentId = req.params["comment-id"];
-        const deletedComment =
+        let commentId = req.params["comment_id"];
+        
             await commentModel.deleteCommentOfArticle(commentId);
         res.status(200).json({
             status: "success",
-            data: deletedComment
+            data:  "comment updated successfully"
         })
     } catch (err) {
         res.status(500).json({
