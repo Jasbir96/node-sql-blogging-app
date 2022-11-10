@@ -77,7 +77,7 @@ const getAll = async (searchObj) => {
         searchString =   searchString 
     }
     
-    const articleSlugs = await getslugsFromTags(tags);
+    const articleSlugs = await getslugsFromTagsHelper(tags);
     let tagsString = "";
 
     if (areTagsAvailable) {
@@ -114,7 +114,7 @@ const getAll = async (searchObj) => {
     })
 
 }
-const getslugsFromTags = (tags) => {
+const getslugsFromTagsHelper = (tags) => {
 
     return new Promise(function (resolve, reject) {
         if (tags.length == 0) {
@@ -141,9 +141,9 @@ const updateBySlug = (slug, toUpdateObject) => {
 
     for (let attr in toUpdateObject) {
         console.log(toUpdateObject[attr]);
-        updateString += `${attr}="${toUpdateObject[attr]}", `
+        updateString += `${attr}="${toUpdateObject[attr]}",`
     }
-    updateString = updateString.substring(0, updateString.length - 2);
+    updateString = updateString.substring(0, updateString.length - 1);
     return new Promise(function (resolve, reject) {
         connection.query(`UPDATE articles SET ${updateString} WHERE slug="${slug}"`,
             function (err, result) {
@@ -155,7 +155,6 @@ const updateBySlug = (slug, toUpdateObject) => {
                     connection.query(`DELETE from article_tags WHERE a_slug="${slug}"`, function (err, result) {
                         if (err) {
                             reject(err);
-
                         } else {
                             const entries = [];
                             for (let i = 0; i < tags.length; i++) {
@@ -163,7 +162,7 @@ const updateBySlug = (slug, toUpdateObject) => {
                                 entries.push([articleObj.slug, tag]);
                             }
                             const tagsTableSql = "INSERT INTO article_tags (a_slug,name) VALUES ?";
-                            connection.query(tagsTableSql, entries, function (err, res) {
+                            connection.query(tagsTableSql, [entries], function (err, res) {
                                 if (err) {
                                     reject(err);
                                     return;
@@ -183,12 +182,18 @@ const updateBySlug = (slug, toUpdateObject) => {
 }
 const deleteBySlug = (slug) => {
     return new Promise(function (resolve, reject) {
-        connection.query(`DELETE from articles WHERE slug = ${slug}`,
+        connection.query(`DELETE from articles WHERE slug = "${slug}"`,
             function (err, result) {
                 if (err) {
                     reject(err)
                 } else {
-                    resolve(result);
+                    connection.query(`DELETE from article_tags WHERE a_slug="${slug}"`, function (err, result) {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    })
                 }
             });
     })

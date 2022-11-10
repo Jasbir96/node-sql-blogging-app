@@ -99,14 +99,19 @@ const updateArticleController = async function (req, res) {
 }
 const deleteArticleController = async function (req, res) {
     try {
-        let articleSlug = req.params["article-slug"];
+        console.log()
+        let articleSlug = req.params["article_slug"];
          await articleModel.deleteBySlug(articleSlug);
         res.status(200).json({
             status: "success",
             data: "article deleted successfully"
         })
     } catch (err) {
-        return res.status(err.statusCode);
+        console.log(err);
+        return res.status(500).json({
+            status: "failure",
+            err: err.message
+        });
     }
 }
 const feedController = async function (req, res) {
