@@ -132,53 +132,67 @@ const getslugsFromTagsHelper = (tags) => {
             })
     })
 }
-const updateBySlug = (slug, toUpdateObject) => {
-
-    let updateString = '';
+const updateBySlug = async (articleSlug, toUpdateObject) => {
     // tags are removed 
-    let tags = toUpdateObject.tags;
-    toUpdateObject.tags = undefined;
-
-    for (let attr in toUpdateObject) {
-        console.log(toUpdateObject[attr]);
-        updateString += `${attr}="${toUpdateObject[attr]}",`
-    }
+    let tags = toUpdateObject.tags||[];
+    delete toUpdateObject.tags;
+const somethingToUpdate=Object.keys(toUpdateObject).length>0;
+const tagsToUpdate=tags.length>0;
+if(somethingToUpdate){
+       let updateString = '';
+       for (let attr in toUpdateObject) {
+           updateString += `${attr}="${toUpdateObject[attr]}",`
+       }
     updateString = updateString.substring(0, updateString.length - 1);
+    await updateArticleHelper(updateString, articleSlug);
+   }
+   if(tagsToUpdate){
+       await updateTagsHelper(tags, articleSlug);
+   }
+   
+}
+const updateArticleHelper = function (updateString, articleSlug){
+    console.log(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`);
     return new Promise(function (resolve, reject) {
-        connection.query(`UPDATE articles SET ${updateString} WHERE slug="${slug}"`,
+        connection.query(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`,
             function (err, result) {
                 if (err) {
-                    // console.log(err);
+                    console.log(err);
                     reject(err)
                 } else {
-                    // remove
-                    connection.query(`DELETE from article_tags WHERE a_slug="${slug}"`, function (err, result) {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            const entries = [];
-                            for (let i = 0; i < tags.length; i++) {
-                                let tag = tags[i];
-                                entries.push([articleObj.slug, tag]);
-                            }
-                            const tagsTableSql = "INSERT INTO article_tags (a_slug,name) VALUES ?";
-                            connection.query(tagsTableSql, [entries], function (err, res) {
-                                if (err) {
-                                    reject(err);
-                                    return;
-                                } else {
-                                    article.tags = res
-                                    resolve(article);
-                                    return;
-                                }
-                            })
-                        }
-                    })
-
+                    resolve();
 
                 }
             });
     })
+}
+const updateTagsHelper = function (tags, articleSlug){
+    return new Promise(function (resolve, reject) {
+        connection.query(`DELETE from article_tags WHERE a_slug="${articleSlug}"`, function (err, result) {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                const entries = [];
+                for (let i = 0; i < tags.length; i++) {
+                    let tag = tags[i];
+                    entries.push([articleSlug, tag]);
+                }
+                
+
+                const tagsTableSql = "INSERT INTO article_tags (a_slug,name) VALUES ?";
+                connection.query(tagsTableSql, [entries], function (err, res) {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve();
+                    }
+                })
+            }
+        })
+    });
+    
+    
 }
 const deleteBySlug = (slug) => {
     return new Promise(function (resolve, reject) {

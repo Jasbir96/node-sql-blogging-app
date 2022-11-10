@@ -37,6 +37,7 @@ const identifyIsSameUserMiddleware = (req, res, next) => {
             return;
         }
         if (loggedinUser == assetOwner) {
+            delete req.body.auid;
             next()
         } else {
             res.status(401).json({

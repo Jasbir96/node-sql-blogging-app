@@ -83,14 +83,22 @@ const getAllArticles = async function (req, res) {
 const updateArticleController = async function (req, res) {
     try {
         let updateObj = req.body;
-        let articleSlug = req.params["article-slug"];
-         await articleModel.updateBySlug(articleSlug, updateObj);
+        let articleSlug = req.params["article_slug"];
+        // if user want to update id or nothing to update 
+        if (Object.keys(updateObj).length == 0||updateObj.title!=undefined) {
+            return res.status(400).json({
+                status:"failure",
+                data:"invalid request"
+            })
+        }
+        await articleModel.updateBySlug(articleSlug,updateObj);
         res.status(200).json({
             status: "success",
             data: "article successfully updated"
         })
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({
             status: "failure",
             err: err.message
