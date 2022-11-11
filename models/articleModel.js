@@ -65,38 +65,33 @@ const getAll = async (searchObj) => {
     const offset = (page - 1) * size
     let tags = searchObj.tags;
     delete searchObj.tags;
-   let toFilterContent =Object.keys(searchObj).length>0;
-   let areTagsAvailable =tags.length>0;
+    let toFilterContent = Object.keys(searchObj).length > 0;
+    let areTagsAvailable = tags.length > 0;
     // filtering results
     let searchString = "";
-    if ( toFilterContent) {
+    if (toFilterContent) {
         for (let attr in searchObj) {
             searchString += `${attr} = "${searchObj[attr]}",`
         }
         searchString = searchString.substring(0, searchString.length - 1);
-        searchString =   searchString 
+        searchString = searchString
     }
-    
+
     const articleSlugs = await getslugsFromTagsHelper(tags);
     let tagsString = "";
 
     if (areTagsAvailable) {
-        let articleSlugString = "(";
-        for (let i = 0; i < articleSlugs.length; i++) {
-            articleSlugString += '"'+ articleSlugs[i]["a_slug"] + '"'+","
-        }
-        articleSlugString = articleSlugString.substring(0, articleSlugString.length - 1);
-        articleSlugString += ")";
+        const articleSlugString = inClauseTransformHelper(articleSlugs, "a_slug");
         tagsString = `slug IN ${articleSlugString} `;
     }
-    let queryString ="";
-    if(toFilterContent==false&&areTagsAvailable==false){
+    let queryString = "";
+    if (toFilterContent == false && areTagsAvailable == false) {
         queryString = `SELECT * from articles LIMIT ${size} OFFSET ${offset}`;
-    }else if(toFilterContent==true&&areTagsAvailable==true){
+    } else if (toFilterContent == true && areTagsAvailable == true) {
         queryString = `SELECT * from articles WHERE ${searchString} AND ${tagsString} LIMIT ${size} OFFSET ${offset}`;
-    }else if(toFilterContent==false&&areTagsAvailable==true){
+    } else if (toFilterContent == false && areTagsAvailable == true) {
         queryString = `SELECT * from articles WHERE  ${tagsString} LIMIT ${size} OFFSET ${offset}`;
-    }else{
+    } else {
         queryString = `SELECT * from articles WHERE ${searchString}  LIMIT ${size} OFFSET ${offset}`;
 
     }
@@ -134,24 +129,24 @@ const getslugsFromTagsHelper = (tags) => {
 }
 const updateBySlug = async (articleSlug, toUpdateObject) => {
     // tags are removed 
-    let tags = toUpdateObject.tags||[];
+    let tags = toUpdateObject.tags || [];
     delete toUpdateObject.tags;
-const somethingToUpdate=Object.keys(toUpdateObject).length>0;
-const tagsToUpdate=tags.length>0;
-if(somethingToUpdate){
-       let updateString = '';
-       for (let attr in toUpdateObject) {
-           updateString += `${attr}="${toUpdateObject[attr]}",`
-       }
-    updateString = updateString.substring(0, updateString.length - 1);
-    await updateArticleHelper(updateString, articleSlug);
-   }
-   if(tagsToUpdate){
-       await updateTagsHelper(tags, articleSlug);
-   }
-   
+    const somethingToUpdate = Object.keys(toUpdateObject).length > 0;
+    const tagsToUpdate = tags.length > 0;
+    if (somethingToUpdate) {
+        let updateString = '';
+        for (let attr in toUpdateObject) {
+            updateString += `${attr}="${toUpdateObject[attr]}",`
+        }
+        updateString = updateString.substring(0, updateString.length - 1);
+        await updateArticleHelper(updateString, articleSlug);
+    }
+    if (tagsToUpdate) {
+        await updateTagsHelper(tags, articleSlug);
+    }
+
 }
-const updateArticleHelper = function (updateString, articleSlug){
+const updateArticleHelper = (updateString, articleSlug)=> {
     console.log(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`);
     return new Promise(function (resolve, reject) {
         connection.query(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`,
@@ -166,7 +161,7 @@ const updateArticleHelper = function (updateString, articleSlug){
             });
     })
 }
-const updateTagsHelper = function (tags, articleSlug){
+const updateTagsHelper =  (tags, articleSlug)=> {
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE from article_tags WHERE a_slug="${articleSlug}"`, function (err, result) {
             if (err) {
@@ -178,7 +173,7 @@ const updateTagsHelper = function (tags, articleSlug){
                     let tag = tags[i];
                     entries.push([articleSlug, tag]);
                 }
-                
+
 
                 const tagsTableSql = "INSERT INTO article_tags (a_slug,name) VALUES ?";
                 connection.query(tagsTableSql, [entries], function (err, res) {
@@ -191,8 +186,8 @@ const updateTagsHelper = function (tags, articleSlug){
             }
         })
     });
-    
-    
+
+
 }
 const deleteBySlug = (slug) => {
     return new Promise(function (resolve, reject) {
@@ -216,31 +211,47 @@ const feed = (userId, page, size) => {
     page = page || 1;
     size = size || 10;
     return new Promise(function (resolve, reject) {
-        connection.query(`SELECT following_id from user_following WHERE
-        u_id=${userId}`, function (err, result) {
+        // if doen't follow anyone wala case 
+        connection.query(`SELECT following_id from user_following WHERE u_id="${userId}"`, function (err, result) {
             if (err) {
                 reject(err);
             } else {
-                let followingArr = "(" + result.join(",") + ")";
-                let offset = (page - 1) * size
-                connection.query(`SELECT * from articles WHERE author_id IN ${followingArr}
-                LIMIT ${size} OFFSET ${offset}
+                let offset = (page - 1) * size;
+                const followingArrString = inClauseTransformHelper( result,"following_id");
+                console.log(followingArrString);
+                connection.query(`SELECT * from articles WHERE author_id IN ${followingArrString} LIMIT ${size} OFFSET ${offset}
                 `, function (err, res) {
-                    if (res.length == size) {
+                    if (err) {
+                        console.log("second conn", err);
+                        reject(err);
+                    }
+                    else if (res.length == size) {
                         resolve(res);
                     } else if (res.length != 0) {
                         // rest get kar lo aur append kr do 
-                        connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArr}
+                        connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArrString}
                                     LIMIT ${size - res.length}`, function (err, respub) {
+                            if (err) {
+                                console.log("else if wala case", err);
+                                reject(err);
+                                return;
+                            }
                             resolve([...res, ...respub,]);
                         });
                     } else {
                         // page: 3
-                        connection.query(`SELECT COUNT(*) from articles WHERE author_id NOT IN ${followingArr}`, function (err, res) {
+                        console.log("Inside else");
+                        connection.query(`SELECT COUNT(*) from articles WHERE author_id NOT IN ${followingArrString} `, function (err, res) {
+                            if (err) {
+                                console.log("else ",err);
+                            }
                             let actualOffset = (page - 1) * size;
-                            let offsetForNonFollowing = actualOffset - res;
-                            connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArr}
-                        LIMIT ${size} OFFSET ${offsetForNonFollowing}`, function (err, res) {
+                            let offsetForNonFollowing = actualOffset - res.length;
+                            connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArrString}
+                                        LIMIT ${size} OFFSET ${offsetForNonFollowing}`,function (err, res) {
+                            if(err){
+                                console.log("else ke andar waali",err);
+                            }
                                 resolve(res);
                             });
                         })
@@ -277,6 +288,16 @@ const dislike = (userId, articleSlug) => {
                 }
             });
     })
+}
+const inClauseTransformHelper=(arr,key)=>{
+    console.log(arr, arr[0]);
+    let arraySlugString = "(";
+    for (let i = 0; i < arr.length; i++) {
+        arraySlugString += '"' + arr[i][key] + '"' + ","
+    }
+    arraySlugString = arraySlugString.substring(0, arraySlugString.length - 1);
+    arraySlugString += ")";
+    return arraySlugString
 }
 module.exports.create = create;
 module.exports.getByEntity = getByEntity;

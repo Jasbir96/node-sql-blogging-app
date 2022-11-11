@@ -124,8 +124,11 @@ const deleteArticleController = async function (req, res) {
 }
 const feedController = async function (req, res) {
     try {
-        const articles = await articleModel.feed(req.query);
-        if (articles == null) {
+       const page = req.query.page || 1;
+       const size = req.query.size || 10;
+       const userId=req.userId;
+        const articles = await articleModel.feed(userId,page,size);
+        if(articles == null) {
             res.status(404).json({
                 status: "failure",
                 data: "articles not found"
@@ -134,7 +137,7 @@ const feedController = async function (req, res) {
         }
         res.status(200).json({
             status: "success",
-            data: article
+            data: articles
         })
     } catch (err) {
         res.status(500).json({
@@ -177,7 +180,7 @@ const dislikeArticleController = async function (req, res) {
         })
     }
 }
-// **************comments section ****************
+// **************comments section****************
 const createCommentController = async function (req, res) {
     try {
         const articleSlug = req.params["article_slug"];

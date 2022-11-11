@@ -27,13 +27,11 @@ const identifyIsSameUserMiddleware = (req, res, next) => {
     try {
         let loggedinUser = req.userId;
         let assetOwner = req.body.auid;
-        console.log("assetOwner: " + assetOwner);
-        console.log("userId: " + loggedinUser);
 
         if(assetOwner==undefined){
         res.status(400).json({
             status: "failure",
-            message:"not authorized"})   
+            message:"you are not the owner of this asset"})   
             return;
         }
         if (loggedinUser == assetOwner) {
