@@ -70,4 +70,4 @@ npm run dev
 npm run test
 ```
 
-Refer API Usage [here](api.md).
+Refer API Usage [here](https://documenter.getpostman.com/view/24376193/2s8YeprsFB).
