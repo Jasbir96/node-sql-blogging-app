@@ -17,7 +17,6 @@ const create = async (articleObj) => {
                 return;
             } else {
                 // insert tags in article_tags db 
-                console.log("Hello");
                 const entries = [];
                 for (let i = 0; i < tags.length; i++) {
                     let tag = tags[i];
@@ -146,7 +145,7 @@ const updateBySlug = async (articleSlug, toUpdateObject) => {
     }
 
 }
-const updateArticleHelper = (updateString, articleSlug)=> {
+const updateArticleHelper = (updateString, articleSlug) => {
     console.log(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`);
     return new Promise(function (resolve, reject) {
         connection.query(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`,
@@ -161,7 +160,7 @@ const updateArticleHelper = (updateString, articleSlug)=> {
             });
     })
 }
-const updateTagsHelper =  (tags, articleSlug)=> {
+const updateTagsHelper = (tags, articleSlug) => {
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE from article_tags WHERE a_slug="${articleSlug}"`, function (err, result) {
             if (err) {
@@ -216,47 +215,64 @@ const feed = (userId, page, size) => {
             if (err) {
                 reject(err);
             } else {
-                let offset = (page - 1) * size;
-                const followingArrString = inClauseTransformHelper( result,"following_id");
-                console.log(followingArrString);
-                connection.query(`SELECT * from articles WHERE author_id IN ${followingArrString} LIMIT ${size} OFFSET ${offset}
-                `, function (err, res) {
-                    if (err) {
-                        console.log("second conn", err);
-                        reject(err);
-                    }
-                    else if (res.length == size) {
-                        resolve(res);
-                    } else if (res.length != 0) {
-                        // rest get kar lo aur append kr do 
-                        connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArrString}
-                                    LIMIT ${size - res.length}`, function (err, respub) {
-                            if (err) {
-                                console.log("else if wala case", err);
-                                reject(err);
-                                return;
-                            }
-                            resolve([...res, ...respub,]);
-                        });
-                    } else {
-                        // page: 3
-                        console.log("Inside else");
-                        connection.query(`SELECT COUNT(*) from articles WHERE author_id NOT IN ${followingArrString} `, function (err, res) {
-                            if (err) {
-                                console.log("else ",err);
-                            }
-                            let actualOffset = (page - 1) * size;
-                            let offsetForNonFollowing = actualOffset - res.length;
+
+                if (result.length == 0) {
+                    let offset = (page - 1) * size;
+                    connection.query(`SELECT * from articles ORDER BY created_at DESC
+                                         LIMIT ${size} OFFSET ${offset}
+                                         
+                                         `, function (err, res) {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve(res);
+                        }
+                    });
+
+                }
+                else {
+                    let offset = (page - 1) * size;
+                    const followingArrString = inClauseTransformHelper(result, "following_id");
+                    connection.query(`SELECT * from articles WHERE author_id IN ${followingArrString} ORDER BY created_at DESC LIMIT ${size} OFFSET ${offset}`, function (err, res) {
+                        if (err) {
+                            reject(err);
+                        }
+                        else if (res.length == size) {
+                            resolve(res);
+                        } else if (res.length != 0) {
+                            // rest get kar lo aur append kr do
                             connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArrString}
-                                        LIMIT ${size} OFFSET ${offsetForNonFollowing}`,function (err, res) {
-                            if(err){
-                                console.log("else ke andar waali",err);
-                            }
-                                resolve(res);
+                            ORDER BY created_at DESC
+                                    LIMIT ${size - res.length} OFFSET ${offset}
+                                    `, function (err, respub) {
+                                if (err) {
+                                    reject(err);
+                                    return;
+                                }
+                                resolve([...res, ...respub,]);
                             });
-                        })
-                    }
-                })
+                        } else {
+                            // page: 3
+
+                            connection.query(`SELECT COUNT(*) from articles WHERE author_id NOT IN ${followingArrString} `, function (err, res) {
+                                if (err) {
+                                    reject(err);
+                                }
+                                let actualOffset = (page - 1) * size;
+                                let offsetForNonFollowing = actualOffset - res.length;
+                                connection.query(`SELECT * from articles WHERE author_id NOT IN ${followingArrString}
+                                ORDER BY created_at DESC   LIMIT ${size} OFFSET ${offsetForNonFollowing} `, function (err, res) {
+                                    if (err) {
+                                        reject(err);
+                                    }
+                                    resolve(res);
+                                });
+                            })
+                        }
+                    })
+                }
+
 
             }
         })
@@ -267,7 +283,7 @@ const like = (userId, articleSlug) => {
         connection.query(`INSERT INTO likes SET u_id = "${userId}", article_slug = "${articleSlug}" `,
             function (err, result) {
                 if (err) {
-                    console.log(err);
+
                     reject(err)
                     return;
                 } else {
@@ -289,7 +305,7 @@ const dislike = (userId, articleSlug) => {
             });
     })
 }
-const inClauseTransformHelper=(arr,key)=>{
+const inClauseTransformHelper = (arr, key) => {
     console.log(arr, arr[0]);
     let arraySlugString = "(";
     for (let i = 0; i < arr.length; i++) {
