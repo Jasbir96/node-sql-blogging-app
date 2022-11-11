@@ -78,7 +78,7 @@ const followUserController = async function (req, res) {
                     status:"failure",
                     message:"missing required parameters"
             })}
-        let userId = req.body.id;
+        let userId = req.userId;
         // the user i want to follow;
         let followingId = req.body.following_id
         await userModel.follow(userId, followingId);
@@ -103,7 +103,8 @@ const unFollowUserController = async function (req, res) {
                 })
         }
         let userId = req.userId;
-        
+        let followingId = req.body.following_id
+;
         await userModel.unfollow(userId, followingId);
         res.status(200).json({
             status: "success",

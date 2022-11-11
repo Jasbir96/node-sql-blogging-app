@@ -70,6 +70,7 @@ const follow = (userId, followingId) => {
     })
 }
 const unfollow = (userId, followingId) => {
+
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE  FROM user_following 
         WHERE u_id = '${userId}' AND following_id = '${followingId}'`,
@@ -77,6 +78,7 @@ const unfollow = (userId, followingId) => {
                 if (err) {
                     reject(err);
                 } else {
+                    console.log(result)
                     resolve(result);
                 }
             });
