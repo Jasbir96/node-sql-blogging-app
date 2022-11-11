@@ -72,7 +72,7 @@ const loginUserController = async function (req, res) {
 
 const followUserController = async function (req, res) {
     try {
-        if(req.body.id==undefined||req.body.following_id==undefined){
+        if(req.body.following_id==undefined){
             res.status(400)
             .json({
                     status:"failure",
@@ -95,9 +95,15 @@ const followUserController = async function (req, res) {
 }
 const unFollowUserController = async function (req, res) {
     try {
-        let userId = req.body.id;
-        // the user i want to follow;
-        let followingId = req.body.following_id
+        if (req.body.following_id == undefined) {
+            res.status(400)
+                .json({
+                    status: "failure",
+                    message: "missing required parameters"
+                })
+        }
+        let userId = req.userId;
+        
         await userModel.unfollow(userId, followingId);
         res.status(200).json({
             status: "success",
