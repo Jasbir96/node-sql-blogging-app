@@ -23,12 +23,10 @@ const create = async (userObj) => {
 const getByEntity = (searchObj) => {
     let searchString = '';
     for (let attr in searchObj) {
-        console.log(searchObj[attr]);
         searchString += `${attr}="${searchObj[attr]}", `
     }
     // to remove extra comma
     searchString = searchString.substring(0, searchString.length - 2);
-    console.log(searchString);
     return new Promise(function (resolve, reject) {
         connection.query(`SELECT * from users WHERE ${searchString}`,
             function (err, res) {
@@ -78,7 +76,6 @@ const unfollow = (userId, followingId) => {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(result)
                     resolve(result);
                 }
             });

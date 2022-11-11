@@ -36,11 +36,8 @@ const create = async (articleObj) => {
     })
 }
 const getByEntity = (searchObj) => {
-    // console.log(uid);
     let searchString = '';
-    // console.log(toUpdateObject);
     for (let attr in searchObj) {
-        console.log(searchObj[attr]);
         searchString += `${attr} = "${searchObj[attr]}", `
     }
     searchString = searchString.substring(0, searchString.length - 2);
@@ -101,7 +98,6 @@ const getAll = async (searchObj) => {
                     reject(err)
                     return;
                 } else {
-                    // console.log(res);
                     resolve(res);
                 }
             })
@@ -146,12 +142,10 @@ const updateBySlug = async (articleSlug, toUpdateObject) => {
 
 }
 const updateArticleHelper = (updateString, articleSlug) => {
-    console.log(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`);
     return new Promise(function (resolve, reject) {
         connection.query(`UPDATE articles SET ${updateString} WHERE slug="${articleSlug}"`,
             function (err, result) {
                 if (err) {
-                    console.log(err);
                     reject(err)
                 } else {
                     resolve();
@@ -164,7 +158,6 @@ const updateTagsHelper = (tags, articleSlug) => {
     return new Promise(function (resolve, reject) {
         connection.query(`DELETE from article_tags WHERE a_slug="${articleSlug}"`, function (err, result) {
             if (err) {
-                console.log(err);
                 reject(err);
             } else {
                 const entries = [];
@@ -223,7 +216,6 @@ const feed = (userId, page, size) => {
                                          
                                          `, function (err, res) {
                         if (err) {
-                            console.log(err);
                             reject(err);
                         } else {
                             resolve(res);
@@ -306,7 +298,6 @@ const dislike = (userId, articleSlug) => {
     })
 }
 const inClauseTransformHelper = (arr, key) => {
-    console.log(arr, arr[0]);
     let arraySlugString = "(";
     for (let i = 0; i < arr.length; i++) {
         arraySlugString += '"' + arr[i][key] + '"' + ","

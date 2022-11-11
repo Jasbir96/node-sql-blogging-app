@@ -9,7 +9,6 @@ const create = async (articleSlug,uid,content) => {
         connection.query(`INSERT INTO comments SET id="${id}", article_slug="${articleSlug}", u_id="${uid}", content="${content}"`,
             function (err, res) {
                 if (err) {
-                    console.log(err);
                     reject(err);
                 } else {
                     resolve(res);

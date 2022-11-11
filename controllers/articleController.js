@@ -73,7 +73,6 @@ const getAllArticles = async function (req, res) {
             data: articles
         })
     } catch (err) {
-        console.log(err);
         res.status(500).json({
             status: "failure",
             err: err.message
@@ -98,7 +97,6 @@ const updateArticleController = async function (req, res) {
         })
     }
     catch (err) {
-        console.log(err);
         res.status(500).json({
             status: "failure",
             err: err.message
@@ -107,7 +105,6 @@ const updateArticleController = async function (req, res) {
 }
 const deleteArticleController = async function (req, res) {
     try {
-        console.log()
         let articleSlug = req.params["article_slug"];
          await articleModel.deleteBySlug(articleSlug);
         res.status(200).json({
@@ -115,7 +112,6 @@ const deleteArticleController = async function (req, res) {
             data: "article deleted successfully"
         })
     } catch (err) {
-        console.log(err);
         return res.status(500).json({
             status: "failure",
             err: err.message

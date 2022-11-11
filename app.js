@@ -18,8 +18,6 @@ app.use("/profiles",profileRouter);
 app.use("/articles",articleRouter);
 
 
-
-
 // added 404 page not found route
 app.use(function (req, res) {
     res.status(404).json({

@@ -62,7 +62,6 @@ const loginUserController = async function (req, res) {
             message:user
         })
     } catch (err) {
-        console.log(err);
         res.status(500).json({
             message: err.message,
             status:"failure"
