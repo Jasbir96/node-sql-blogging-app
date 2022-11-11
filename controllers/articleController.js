@@ -128,7 +128,7 @@ const feedController = async function (req, res) {
        const size = req.query.size || 10;
        const userId=req.userId;
         const articles = await articleModel.feed(userId,page,size);
-        if(articles == null) {
+        if(articles.length==0) {
             res.status(404).json({
                 status: "failure",
                 data: "articles not found"

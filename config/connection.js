@@ -9,7 +9,6 @@ const connection = mysql.createConnection({
 
 connection.connect(function (err,resp){
     if(err){
-        console.log(process.env.PASSWORD,);
         console.error(err);
     }else{
         console.log(resp);
